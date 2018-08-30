@@ -55,6 +55,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private static final int TYPE_FLASH_AUTO = 0x021;
     private static final int TYPE_FLASH_ON = 0x022;
     private static final int TYPE_FLASH_OFF = 0x023;
+    private static final int TYPE_FLASH_TORCH = 0x024;
     private int type_flash = TYPE_FLASH_OFF;
 
     //拍照浏览时候的类型
@@ -114,6 +115,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     private boolean firstTouch = true;
     private float firstTouchLength = 0;
 
+    private boolean onlySupportFlashModeTorch = false;
+
     public JCameraView(Context context) {
         this(context, null);
     }
@@ -160,9 +163,17 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         mFlashLamp.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                type_flash++;
-                if (type_flash > 0x023)
-                    type_flash = TYPE_FLASH_AUTO;
+                if (onlySupportFlashModeTorch) {
+                    if (type_flash == TYPE_FLASH_TORCH) {
+                        type_flash = TYPE_FLASH_OFF;
+                    } else {
+                        type_flash = TYPE_FLASH_TORCH;
+                    }
+                } else {
+                    type_flash++;
+                    if (type_flash > 0x023)
+                        type_flash = TYPE_FLASH_AUTO;
+                }
                 setFlashRes();
             }
         });
@@ -197,14 +208,15 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             @Override
             public void recordShort(final long time) {
                 mCaptureLayout.setTextWithAnimation("录制时间过短");
-                mSwitchCamera.setVisibility(VISIBLE);
-                mFlashLamp.setVisibility(VISIBLE);
+
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        mSwitchCamera.setVisibility(VISIBLE);
+                        mFlashLamp.setVisibility(VISIBLE);
                         machine.stopRecord(true, time);
                     }
-                }, 1500 - time);
+                }, 200);
             }
 
             @Override
@@ -517,6 +529,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                     mMediaPlayer.prepare();
                 } catch (IOException e) {
                     e.printStackTrace();
+                    mMediaPlayer.reset();
                 }
             }
         }).start();
@@ -594,6 +607,20 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 mFlashLamp.setImageResource(R.drawable.ic_flash_off);
                 machine.flash(Camera.Parameters.FLASH_MODE_OFF);
                 break;
+
+            case TYPE_FLASH_TORCH:
+                mFlashLamp.setImageResource(R.drawable.ic_flash_on);
+                machine.flash(Camera.Parameters.FLASH_MODE_TORCH);
+                break;
         }
+    }
+
+    /**
+     * 是否支持打开手电筒
+     *
+     * @param support
+     */
+    public void onlySupportFlashModeTorch(boolean support) {
+        onlySupportFlashModeTorch = support;
     }
 }

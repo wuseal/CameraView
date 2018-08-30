@@ -271,6 +271,7 @@ public class CameraInterface implements Camera.PreviewCallback {
             return;
         Camera.Parameters params = mCamera.getParameters();
         params.setFlashMode(flashMode);
+        this.mParams = params;
         mCamera.setParameters(params);
     }
 
@@ -390,6 +391,8 @@ public class CameraInterface implements Camera.PreviewCallback {
                 }
                 mCamera.setParameters(mParams);
                 mParams = mCamera.getParameters();
+                mCamera.stopPreview();
+                mCamera.reconnect();
                 mCamera.setPreviewDisplay(holder);  //SurfaceView
                 mCamera.setDisplayOrientation(cameraAngle);//浏览角度
                 mCamera.setPreviewCallback(this); //每一帧回调
@@ -593,7 +596,6 @@ public class CameraInterface implements Camera.PreviewCallback {
             mediaRecorder.setVideoEncodingBitRate(mediaQuality);
         }
         mediaRecorder.setPreviewDisplay(surface);
-
         videoFileName = "video_" + System.currentTimeMillis() + ".mp4";
         if (saveVideoPath.equals("")) {
             saveVideoPath = Environment.getExternalStorageDirectory().getPath();
@@ -604,6 +606,8 @@ public class CameraInterface implements Camera.PreviewCallback {
             mediaRecorder.prepare();
             mediaRecorder.start();
             isRecorder = true;
+            (this).mParams.setZoom(0);
+            mCamera.setParameters(this.mParams);
         } catch (IllegalStateException e) {
             e.printStackTrace();
             Log.i("CJT", "startRecord IllegalStateException");
@@ -638,6 +642,7 @@ public class CameraInterface implements Camera.PreviewCallback {
                 mediaRecorder = new MediaRecorder();
             } finally {
                 if (mediaRecorder != null) {
+                    mediaRecorder.reset();
                     mediaRecorder.release();
                 }
                 mediaRecorder = null;
