@@ -16,6 +16,7 @@ import com.cjt2325.cameralibrary.JCameraView;
 import com.cjt2325.cameralibrary.listener.ClickListener;
 import com.cjt2325.cameralibrary.listener.ErrorListener;
 import com.cjt2325.cameralibrary.listener.JCameraListener;
+import com.cjt2325.cameralibrary.listener.RecordShortListener;
 import com.cjt2325.cameralibrary.util.DeviceUtil;
 import com.cjt2325.cameralibrary.util.FileUtil;
 
@@ -90,6 +91,12 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+//        jCameraView.setRecordShortListener(new RecordShortListener() {
+//            @Override
+//            public void recordShort() {
+//                Toast.makeText(CameraActivity.this,"录制时间过短",Toast.LENGTH_SHORT).show();
+//            }
+//        });
         Log.i("CJT", DeviceUtil.getDeviceModel());
     }
 

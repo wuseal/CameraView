@@ -6,7 +6,10 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.os.Build;
+import android.support.v7.widget.AppCompatImageView;
 import android.view.View;
+import android.widget.ImageView;
 
 /**
  * =====================================
@@ -16,9 +19,10 @@ import android.view.View;
  * 描    述：拍照或录制完成后弹出的确认和返回按钮
  * =====================================
  */
-public class TypeButton extends View{
+public class TypeButton extends AppCompatImageView {
     public static final int TYPE_CANCEL = 0x001;
     public static final int TYPE_CONFIRM = 0x002;
+    public static final int TYPE_OTHER = 0x003;
     private int button_type;
     private int button_size;
 
@@ -50,12 +54,24 @@ public class TypeButton extends View{
         strokeWidth = size / 50f;
         index = button_size / 12f;
         rectF = new RectF(center_X, center_Y - index, center_X + index * 2, center_Y + index);
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            setElevation(5);
+        }
     }
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         setMeasuredDimension(button_size, button_size);
+    }
+
+    @Override
+    public void setImageResource(int resId) {
+        if (resId != 0) {
+            button_type = TYPE_OTHER;
+        }
+        super.setImageResource(resId);
     }
 
     @Override

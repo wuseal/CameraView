@@ -8,8 +8,13 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.os.Build;
 import android.os.CountDownTimer;
+import android.support.v4.app.AppOpsManagerCompat;
+import android.support.v7.widget.AppCompatImageHelper;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,9 +50,9 @@ public class CaptureButton extends View {
     public static final int STATE_BAN = 0x005;         //禁止状态
 
     //    private int progress_color = 0xEE16AE16;            //进度条颜色
-    private int progress_color = 0XEE008EF0;            //进度条颜色
-    private int outside_color = 0xEEDCDCDC;             //外圆背景色
-    private int inside_color = 0xFFFFFFFF;              //内圆背景色
+    private int progress_color = 0XFF008EF0;            //进度条颜色
+    private int outside_color = 0xFFFFFFFF;             //外圆背景色
+    private int inside_color = 0xFFFF0000;              //内圆背景色
 
 
     private float event_Y;  //Touch_Event_Down时候记录的Y值
@@ -88,15 +93,17 @@ public class CaptureButton extends View {
 
     public CaptureButton(Context context, int size) {
         super(context);
-        this.button_size = size;
-        button_radius = size / 2.0f;
+        this.button_size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());
 
-        button_outside_radius = button_radius;
-        button_inside_radius = button_radius * 0.75f;
+        button_radius = button_size / 2.0f;
 
-        strokeWidth = size / 15;
-        outside_add_size = size / 5;
-        inside_reduce_size = size / 8;
+
+        button_outside_radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 35, getResources().getDisplayMetrics());
+        button_inside_radius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 30, getResources().getDisplayMetrics());
+
+        strokeWidth = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 5, getResources().getDisplayMetrics());
+        outside_add_size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 15, getResources().getDisplayMetrics());
+        inside_reduce_size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 10, getResources().getDisplayMetrics());
 
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
@@ -121,6 +128,10 @@ public class CaptureButton extends View {
                 center_Y + (button_radius + outside_add_size - strokeWidth / 2));
 
         timer = new RecordCountDownTimer(duration, duration / 360);    //录制定时器
+
+        if (Build.VERSION.SDK_INT >= 21) {
+            setElevation(5);
+        }
     }
 
     @Override
@@ -237,9 +248,9 @@ public class CaptureButton extends View {
         //还原按钮初始状态动画
         restRecordAnimation(
                 button_outside_radius,
-                button_radius,
+                button_outside_radius - outside_add_size,
                 button_inside_radius,
-                button_radius * 0.75f
+                button_inside_radius + inside_reduce_size
         );
     }
 

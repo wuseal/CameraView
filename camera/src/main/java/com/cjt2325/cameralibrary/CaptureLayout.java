@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
@@ -64,6 +65,10 @@ public class CaptureLayout extends FrameLayout {
     private int iconLeft = 0;
     private int iconRight = 0;
 
+    private int iconCancel = 0;
+
+    private int iconConfirm = 0;
+
     private boolean isFirst = true;
 
     public CaptureLayout(Context context) {
@@ -86,8 +91,8 @@ public class CaptureLayout extends FrameLayout {
         } else {
             layout_width = outMetrics.widthPixels / 2;
         }
-        button_size = (int) (layout_width / 4.5f);
-        layout_height = button_size + (button_size / 5) * 2 + 100;
+        button_size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 70, getResources().getDisplayMetrics());;
+        layout_height = (int) (button_size + TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 90, getResources().getDisplayMetrics()));
 
         initView();
         initEvent();
@@ -193,10 +198,15 @@ public class CaptureLayout extends FrameLayout {
         });
 
         //取消按钮
-        btn_cancel = new TypeButton(getContext(), TypeButton.TYPE_CANCEL, button_size);
+        if (iconCancel == 0) {
+            btn_cancel = new TypeButton(getContext(), TypeButton.TYPE_CANCEL, button_size);
+        } else {
+            btn_cancel = new TypeButton(getContext(), TypeButton.TYPE_OTHER, button_size);
+            btn_cancel.setImageResource(iconCancel);
+        }
         final LayoutParams btn_cancel_param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         btn_cancel_param.gravity = Gravity.CENTER_VERTICAL;
-        btn_cancel_param.setMargins((layout_width / 4) - button_size / 2, 0, 0, 0);
+        btn_cancel_param.setMargins(layout_width / 5, 0, 0, 0);
         btn_cancel.setLayoutParams(btn_cancel_param);
         btn_cancel.setOnClickListener(new OnClickListener() {
             @Override
@@ -210,10 +220,15 @@ public class CaptureLayout extends FrameLayout {
         });
 
         //确认按钮
-        btn_confirm = new TypeButton(getContext(), TypeButton.TYPE_CONFIRM, button_size);
+        if (iconConfirm == 0) {
+            btn_confirm = new TypeButton(getContext(), TypeButton.TYPE_CONFIRM, button_size);
+        } else {
+            btn_confirm = new TypeButton(getContext(), TypeButton.TYPE_OTHER, button_size);
+            btn_confirm.setImageResource(iconConfirm);
+        }
         LayoutParams btn_confirm_param = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
         btn_confirm_param.gravity = Gravity.CENTER_VERTICAL | Gravity.RIGHT;
-        btn_confirm_param.setMargins(0, 0, (layout_width / 4) - button_size / 2, 0);
+        btn_confirm_param.setMargins(0, 0, layout_width / 5, 0);
         btn_confirm.setLayoutParams(btn_confirm_param);
         btn_confirm.setOnClickListener(new OnClickListener() {
             @Override
@@ -276,6 +291,7 @@ public class CaptureLayout extends FrameLayout {
         txt_param.setMargins(0, 0, 0, 0);
         txt_tip.setText("轻触拍照，长按摄像");
         txt_tip.setTextColor(0xFFFFFFFF);
+        txt_tip.setTextSize(TypedValue.COMPLEX_UNIT_SP,15);
         txt_tip.setGravity(Gravity.CENTER);
         txt_tip.setLayoutParams(txt_param);
 
@@ -300,7 +316,8 @@ public class CaptureLayout extends FrameLayout {
         if (this.iconLeft != 0)
             iv_custom_left.setVisibility(VISIBLE);
         else
-            btn_return.setVisibility(VISIBLE);
+//            btn_return.setVisibility(VISIBLE);
+            btn_return.setVisibility(INVISIBLE);
         if (this.iconRight != 0)
             iv_custom_right.setVisibility(VISIBLE);
     }
@@ -347,7 +364,7 @@ public class CaptureLayout extends FrameLayout {
             btn_return.setVisibility(GONE);
         } else {
             iv_custom_left.setVisibility(GONE);
-            btn_return.setVisibility(VISIBLE);
+            btn_return.setVisibility(INVISIBLE);
         }
         if (this.iconRight != 0) {
             iv_custom_right.setImageResource(iconRight);
@@ -363,5 +380,25 @@ public class CaptureLayout extends FrameLayout {
 
     public void setRightClickListener(ClickListener rightClickListener) {
         this.rightClickListener = rightClickListener;
+    }
+
+    /**
+     * 设置取消使用录制的视频按钮的icon的资源iD
+     *
+     * @param iconCancel
+     */
+    public void setIconCancel(int iconCancel) {
+        this.iconCancel = iconCancel;
+        btn_cancel.setImageResource(iconCancel);
+    }
+
+    /**
+     * 设置确认使用录制的视频的按钮的资源ID
+     *
+     * @param iconConfirm
+     */
+    public void setIconConfirm(int iconConfirm) {
+        this.iconConfirm = iconConfirm;
+        btn_confirm.setImageResource(iconConfirm);
     }
 }

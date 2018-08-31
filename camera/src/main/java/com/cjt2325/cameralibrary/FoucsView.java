@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.View;
 
 import com.cjt2325.cameralibrary.util.ScreenUtils;
@@ -34,7 +35,7 @@ public class FoucsView extends View {
 
     public FoucsView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.size = ScreenUtils.getScreenWidth(context) / 3;
+        this.size = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());;
         mPaint = new Paint();
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);
