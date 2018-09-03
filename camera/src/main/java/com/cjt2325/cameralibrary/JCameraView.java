@@ -254,6 +254,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 machine.stopRecord(false, time);
                 mFlashLamp.setVisibility(INVISIBLE);
                 mBackup.setVisibility(INVISIBLE);
+                mFoucsView.clearAnimation();
+                mFoucsView.setVisibility(INVISIBLE);
             }
 
             @Override
@@ -372,14 +374,13 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        switch (MotionEventCompat.getActionMasked(ev)) {
 
+        switch (MotionEventCompat.getActionMasked(ev)) {
 
             case ACTION_POINTER_DOWN:
                 Log.i("CJT", "ACTION_POINTER_DOWN ");
                 setFocusViewWidthAnimation(ev.getX(ev.getActionIndex()), ev.getY(ev.getActionIndex()));
                 break;
-
 
         }
         return super.dispatchTouchEvent(ev);
