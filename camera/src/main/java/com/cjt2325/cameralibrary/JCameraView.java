@@ -10,6 +10,7 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
+import android.support.v4.view.MotionEventCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
@@ -34,6 +35,9 @@ import com.cjt2325.cameralibrary.util.ScreenUtils;
 import com.cjt2325.cameralibrary.view.CameraView;
 
 import java.io.IOException;
+
+import static android.support.v4.view.MotionEventCompat.ACTION_POINTER_DOWN;
+import static android.support.v4.view.MotionEventCompat.ACTION_POINTER_UP;
 
 
 /**
@@ -319,6 +323,21 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
         CameraInterface.getInstance().doDestroyCamera();
     }
 
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (MotionEventCompat.getActionMasked(ev)) {
+
+
+            case ACTION_POINTER_DOWN:
+                Log.i("CJT", "ACTION_POINTER_DOWN ");
+                setFocusViewWidthAnimation(ev.getX(ev.getActionIndex()), ev.getY(ev.getActionIndex()));
+                break;
+
+
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -330,6 +349,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 }
                 if (event.getPointerCount() == 2) {
                     Log.i("CJT", "ACTION_DOWN = " + 2);
+                    setFocusViewWidthAnimation(event.getX(1), event.getY(1));
+
                 }
                 break;
             case MotionEvent.ACTION_MOVE:
