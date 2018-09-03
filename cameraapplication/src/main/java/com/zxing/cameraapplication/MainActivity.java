@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.cjt2325.CameraActivity;
 import com.cjt2325.cameralibrary.util.DeviceUtil;
 
 public class MainActivity extends AppCompatActivity {

@@ -1,8 +1,9 @@
-package com.zxing.cameraapplication;
+package com.cjt2325;
 
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,14 +14,15 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.cjt2325.cameralibrary.JCameraView;
+import com.cjt2325.cameralibrary.R;
 import com.cjt2325.cameralibrary.listener.ClickListener;
 import com.cjt2325.cameralibrary.listener.ErrorListener;
 import com.cjt2325.cameralibrary.listener.JCameraListener;
-import com.cjt2325.cameralibrary.listener.RecordShortListener;
 import com.cjt2325.cameralibrary.util.DeviceUtil;
 import com.cjt2325.cameralibrary.util.FileUtil;
 
 import java.io.File;
+
 
 public class CameraActivity extends AppCompatActivity {
     private JCameraView jCameraView;
@@ -34,17 +36,17 @@ public class CameraActivity extends AppCompatActivity {
         jCameraView = (JCameraView) findViewById(R.id.jcameraview);
         //设置视频保存路径
         jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory().getPath() + File.separator + "JCamera");
-        jCameraView.setFeatures(JCameraView.BUTTON_STATE_BOTH);
-        jCameraView.setTip("JCameraView Tip");
-        jCameraView.onlySupportFlashModeTorch(true);
+        jCameraView.setFeatures(JCameraView.BUTTON_STATE_ONLY_RECORDER);
+        jCameraView.setTip("长按按钮进行录像");
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
+        jCameraView.onlySupportFlashModeTorch(true);
         jCameraView.setErrorLisenter(new ErrorListener() {
             @Override
             public void onError() {
                 //错误监听
                 Log.i("CJT", "camera error");
                 Intent intent = new Intent();
-                setResult(103, intent);
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
 
@@ -62,7 +64,7 @@ public class CameraActivity extends AppCompatActivity {
                 String path = FileUtil.saveBitmap("JCamera", bitmap);
                 Intent intent = new Intent();
                 intent.putExtra("path", path);
-                setResult(101, intent);
+                setResult(RESULT_CANCELED, intent);
                 finish();
             }
 
@@ -72,8 +74,9 @@ public class CameraActivity extends AppCompatActivity {
                 String path = FileUtil.saveBitmap("JCamera", firstFrame);
                 Log.i("CJT", "url = " + url + ", Bitmap = " + path);
                 Intent intent = new Intent();
-                intent.putExtra("path", path);
-                setResult(101, intent);
+//                intent.putExtra("path", path);
+                intent.setData(Uri.fromFile(new File(url)));
+                setResult(RESULT_OK, intent);
                 finish();
             }
         });
@@ -91,12 +94,6 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
-//        jCameraView.setRecordShortListener(new RecordShortListener() {
-//            @Override
-//            public void recordShort() {
-//                Toast.makeText(CameraActivity.this,"录制时间过短",Toast.LENGTH_SHORT).show();
-//            }
-//        });
         Log.i("CJT", DeviceUtil.getDeviceModel());
     }
 
