@@ -127,6 +127,36 @@ public class CameraMachine implements State {
         state.flash(mode);
     }
 
+    @Override
+    public boolean hasFrontCamera() {
+        return state.hasFrontCamera();
+    }
+
+    @Override
+    public boolean hasBackCamera() {
+        return state.hasBackCamera();
+    }
+
+    @Override
+    public boolean hasFrontFlash() {
+        return state.hasFrontFlash();
+    }
+
+    @Override
+    public boolean hasBackFlash() {
+        return state.hasBackFlash();
+    }
+
+    @Override
+    public boolean isBackCameraOpen() {
+        return state.isBackCameraOpen();
+    }
+
+    @Override
+    public boolean isFrontCameraOpen() {
+        return state.isFrontCameraOpen();
+    }
+
     public State getState() {
         return this.state;
     }

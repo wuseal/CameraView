@@ -86,4 +86,35 @@ public class BorrowVideoState implements State {
     public void flash(String mode) {
 
     }
+
+
+    @Override
+    public boolean hasFrontCamera() {
+        return CameraInterface.getInstance().hasFrontCamera();
+    }
+
+    @Override
+    public boolean hasBackCamera() {
+        return CameraInterface.getInstance().hasBackCamera();
+    }
+
+    @Override
+    public boolean hasFrontFlash() {
+        return CameraInterface.getInstance().hasFrontFlash();
+    }
+
+    @Override
+    public boolean hasBackFlash() {
+        return CameraInterface.getInstance().hasBackFlash();
+    }
+
+    @Override
+    public boolean isBackCameraOpen() {
+        return false;
+    }
+
+    @Override
+    public boolean isFrontCameraOpen() {
+        return false;
+    }
 }

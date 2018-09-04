@@ -38,4 +38,44 @@ public interface State {
     void zoom(float zoom, int type);
 
     void flash(String mode);
+
+    /**
+     * 是否有前置摄像头
+     * @return
+     */
+    boolean hasFrontCamera();
+
+    /**
+     * 是否有后置摄像头
+     * @return
+     */
+    boolean hasBackCamera();
+
+    /**
+     * 是否有前置闪光灯
+     * 这个方法必须在打开相机后才能开始调用
+     * @return
+     */
+    boolean hasFrontFlash();
+
+    /**
+     * 是否有后置闪光灯
+     * 这个方法必须在打开相机后才能开始调用
+     * @return
+     */
+    boolean hasBackFlash();
+
+
+    /**
+     * 当前是否打开了后置摄像头
+     * @return
+     */
+    boolean isBackCameraOpen();
+
+
+    /**
+     * 当前是否打开了前置摄像头
+     * @return
+     */
+    boolean isFrontCameraOpen();
 }

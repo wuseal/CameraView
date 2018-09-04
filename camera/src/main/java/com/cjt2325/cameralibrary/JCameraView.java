@@ -211,6 +211,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             @Override
             public void onClick(View v) {
                 machine.swtich(mVideoView.getHolder(), screenProp);
+                setFlashRes();
+                setFlashLampButtonState();
             }
         });
         //拍照 录像
@@ -241,8 +243,8 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        mSwitchCamera.setVisibility(VISIBLE);
-                        mFlashLamp.setVisibility(VISIBLE);
+                        resetSwitchCameraButton();
+                        setFlashLampButtonState();
                         mBackup.setVisibility(VISIBLE);
                         machine.stopRecord(true, time);
                     }
@@ -315,6 +317,16 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 ((Activity) getContext()).finish();
             }
         });
+
+
+        if (!hasDoubleCamera()) {
+            mSwitchCamera.setVisibility(INVISIBLE);
+        }
+    }
+
+
+    private boolean hasDoubleCamera() {
+        return machine.hasFrontCamera() && machine.hasBackCamera();
     }
 
     @Override
@@ -358,8 +370,28 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
             @Override
             public void run() {
                 CameraInterface.getInstance().doOpenCamera(JCameraView.this);
+                post(new Runnable() {
+                    @Override
+                    public void run() {
+                        setFlashLampButtonState();
+                    }
+                });
             }
         }.start();
+    }
+
+    /**
+     * 设置闪光灯按钮状态
+     */
+    private void setFlashLampButtonState() {
+        boolean needShowFlashButtonForFrontCamera = machine.isFrontCameraOpen() && machine.hasFrontFlash();
+        boolean needShowFlashButtonForBackCamera = machine.isBackCameraOpen() && machine.hasBackCamera();
+        boolean needShowFlashButton = needShowFlashButtonForBackCamera || needShowFlashButtonForFrontCamera;
+        if (needShowFlashButton) {
+            mFlashLamp.setVisibility(VISIBLE);
+        } else {
+            mFlashLamp.setVisibility(INVISIBLE);
+        }
     }
 
     @Override
@@ -505,10 +537,18 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 mVideoView.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
                 break;
         }
-        mSwitchCamera.setVisibility(VISIBLE);
-        mFlashLamp.setVisibility(VISIBLE);
+        resetSwitchCameraButton();
+        setFlashLampButtonState();
         mBackup.setVisibility(VISIBLE);
         mCaptureLayout.resetCaptureLayout();
+    }
+
+    private void resetSwitchCameraButton() {
+        if (hasDoubleCamera()) {
+            mSwitchCamera.setVisibility(VISIBLE);
+        } else {
+            mSwitchCamera.setVisibility(INVISIBLE);
+        }
     }
 
     @Override
@@ -652,6 +692,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
     }
 
     private void setFlashRes() {
+
         switch (type_flash) {
             case TYPE_FLASH_AUTO:
                 mFlashLamp.setImageResource(R.drawable.ic_flash_auto);

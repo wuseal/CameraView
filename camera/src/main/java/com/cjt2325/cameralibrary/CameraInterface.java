@@ -97,6 +97,14 @@ public class CameraInterface implements Camera.PreviewCallback {
     private int nowScaleRate = 0;
     private int recordScleRate = 0;
 
+    private boolean hasFrontCamera = false;
+
+    private boolean hasBackCamera = false;
+
+    private boolean hasFrontFlash = false;
+
+    private boolean hasBackFlash = false;
+
     //视频质量
     private int mediaQuality = JCameraView.MEDIA_QUALITY_MIDDLE;
     private SensorManager sm = null;
@@ -668,9 +676,11 @@ public class CameraInterface implements Camera.PreviewCallback {
             switch (info.facing) {
                 case Camera.CameraInfo.CAMERA_FACING_FRONT:
                     CAMERA_FRONT_POSITION = info.facing;
+                    hasFrontCamera = true;
                     break;
                 case Camera.CameraInfo.CAMERA_FACING_BACK:
                     CAMERA_POST_POSITION = info.facing;
+                    hasBackCamera = true;
                     break;
             }
         }
@@ -781,5 +791,50 @@ public class CameraInterface implements Camera.PreviewCallback {
 
     void isPreview(boolean res) {
         this.isPreviewing = res;
+    }
+
+
+    private boolean hasFlash() {
+        if (mCamera == null) {
+            return false;
+        }
+
+        Camera.Parameters parameters = mCamera.getParameters();
+
+        if (parameters.getFlashMode() == null) {
+            return false;
+        }
+
+        List<String> supportedFlashModes = parameters.getSupportedFlashModes();
+        if (supportedFlashModes == null || supportedFlashModes.isEmpty() || supportedFlashModes.size() == 1 && supportedFlashModes.get(0).equals(Camera.Parameters.FLASH_MODE_OFF)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean hasFrontCamera() {
+        return hasFrontCamera;
+    }
+
+    public boolean hasBackCamera() {
+        return hasBackCamera;
+    }
+
+    public boolean hasFrontFlash() {
+        return hasFrontFlash = hasFrontFlash || (SELECTED_CAMERA == CAMERA_FRONT_POSITION && hasFlash());
+    }
+
+    public boolean hasBackFlash() {
+        return hasBackFlash = hasBackFlash || (SELECTED_CAMERA == CAMERA_POST_POSITION && hasFlash());
+    }
+
+
+    public boolean isFrontCameraOpen() {
+        return mCamera != null && SELECTED_CAMERA == CAMERA_FRONT_POSITION;
+    }
+
+    public boolean isBackCameraOpen() {
+        return mCamera != null && SELECTED_CAMERA == CAMERA_POST_POSITION;
     }
 }
