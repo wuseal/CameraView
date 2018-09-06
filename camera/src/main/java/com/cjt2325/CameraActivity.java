@@ -60,7 +60,7 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void captureSuccess(Bitmap bitmap) {
                 //获取图片bitmap
-//                Log.i("JCameraView", "bitmap = " + bitmap.getWidth());
+                Log.i("JCameraView", "bitmap = " + bitmap.getWidth());
                 String path = FileUtil.saveBitmap("JCamera", bitmap);
                 Intent intent = new Intent();
                 intent.putExtra("path", path);
@@ -71,8 +71,8 @@ public class CameraActivity extends AppCompatActivity {
             @Override
             public void recordSuccess(String url, Bitmap firstFrame) {
                 //获取视频路径
-                String path = FileUtil.saveBitmap("JCamera", firstFrame);
-                Log.i("CJT", "url = " + url + ", Bitmap = " + path);
+//                String path = FileUtil.saveBitmap("JCamera", firstFrame);
+//                Log.i("CJT", "url = " + url + ", Bitmap = " + path);
                 Intent intent = new Intent();
 //                intent.putExtra("path", path);
                 intent.setData(Uri.fromFile(new File(url)));

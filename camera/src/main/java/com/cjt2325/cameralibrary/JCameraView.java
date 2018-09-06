@@ -385,7 +385,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
      */
     private void setFlashLampButtonState() {
         boolean needShowFlashButtonForFrontCamera = machine.isFrontCameraOpen() && machine.hasFrontFlash();
-        boolean needShowFlashButtonForBackCamera = machine.isBackCameraOpen() && machine.hasBackCamera();
+        boolean needShowFlashButtonForBackCamera = machine.isBackCameraOpen() && machine.hasBackFlash();
         boolean needShowFlashButton = needShowFlashButtonForBackCamera || needShowFlashButtonForFrontCamera;
         if (needShowFlashButton) {
             mFlashLamp.setVisibility(VISIBLE);
