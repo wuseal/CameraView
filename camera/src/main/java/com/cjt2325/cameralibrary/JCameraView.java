@@ -237,7 +237,7 @@ public class JCameraView extends FrameLayout implements CameraInterface.CameraOp
                 if (recordShortListener != null) {
                     recordShortListener.recordShort();
                 } else {
-                    mCaptureLayout.setTextWithAnimation("录制时间过短");
+                    mCaptureLayout.setTextWithAnimation(getResources().getString(R.string.camera_record_short));
                 }
 
                 postDelayed(new Runnable() {

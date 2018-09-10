@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">CameraLibrary</string>
+    <string name="camera_record_video">Hold to record video</string>
+    <string name="camera_record_short">Recording too short</string>
 </resources>

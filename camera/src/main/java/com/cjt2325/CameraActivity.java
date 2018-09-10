@@ -37,7 +37,7 @@ public class CameraActivity extends AppCompatActivity {
         //设置视频保存路径
         jCameraView.setSaveVideoPath(Environment.getExternalStorageDirectory().getPath() + File.separator + "JCamera");
         jCameraView.setFeatures(JCameraView.BUTTON_STATE_ONLY_RECORDER);
-        jCameraView.setTip("长按按钮进行录像");
+        jCameraView.setTip(getResources().getString(R.string.camera_record_video));
         jCameraView.setMediaQuality(JCameraView.MEDIA_QUALITY_MIDDLE);
         jCameraView.onlySupportFlashModeTorch(true);
         jCameraView.setErrorLisenter(new ErrorListener() {
