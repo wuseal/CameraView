@@ -1,5 +1,4 @@
 <resources>
-    <string name="app_name">相機庫</string>
     <string name="camera_record_video">長按按鈕進行錄像</string>
     <string name="camera_record_short">錄製時間過短</string>
 </resources>
